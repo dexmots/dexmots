@@ -1,0 +1,92 @@
+defaults:
+  - _self_
+  - task: repose
+  - alg: shac2
+  # - override hydra/launcher: submitit_local
+
+
+# hydra:
+#   sweep:
+#     dir: checkpoints/${exp_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+#     subdir: ${wandb.sweep_name_prefix}-${hydra.job.num}
+  # launcher: # submitit_slurm launcher params
+  #   gpus_per_node: 1
+  #   tasks_per_node: 4
+  #   cpus_per_task: 8
+  #
+exp_name: warp_benchmarks
+
+resume_model: null
+
+general:
+  # logdir: logs/${alg.name}/${task.name}/
+  logdir: logs
+  save_interval: False
+  no_time_stamp: False
+  device: cuda:0
+  run_wandb: False
+  seed: 42
+  train: True
+  play: True
+  checkpoint:
+  multi_gpu: False
+  mixed_precision: False
+
+num_envs: 
+render: False
+debug: false
+
+
+# env-specific defaults for different algs
+task:
+  score_keys: []
+  gamma: 0.99
+  player:
+    games_num: 12
+    num_actors: 4
+
+  ppo:
+    max_epochs: 2000 
+    save_interval: 400
+    save_best_after: 100
+    num_actors: 128
+    minibatch_size: 1920
+    horizon_length: 8
+    actor_mlp:
+      units: 
+        - 128
+        - 64
+        - 32
+    critic_mlp:
+      units:
+        - 64
+        - 64
+    lr: 3e-4
+    lr_schedule: adaptive
+
+  shac:
+    lambda: 0.95
+    actor_mlp:
+      units:
+        - 64
+        - 64
+    critic_mlp:
+      units:
+        - 64
+        - 64
+    target_critic_alpha: 0.4
+    actor_lr: 1e-3
+    critic_lr: 1e-3
+    max_epochs: 2000
+    save_interval: 400
+    steps_num: 32
+    betas: 
+      - 0.7
+      - 0.95
+
+  shac2: ${.shac}
+
+wandb:
+  project: warp-envs
+  entity: krshna
+  group: ${exp_name}

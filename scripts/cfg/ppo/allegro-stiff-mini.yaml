@@ -1,0 +1,92 @@
+params:
+  diff_env:
+    name: AllegroWarpEnv
+    stochastic_env: False
+    episode_length: 256
+    goal_type: 1 # 0: position, 1: orientation, 2: both, 3: position trajectory, 4: orientation trajectory
+    object_type: 8  # 0-3 are meshes, 4 - 8 are primitives
+    action_type: 2 # 0: position, 1: torque
+    goal_path: goal_traj-sliding-2.npy
+    rew_kw:
+      c_act: 0.
+      c_q: 10.
+      c_finger: 0.2
+
+  algo:
+    name: a2c_continuous
+
+  model:
+    name: continuous_a2c_logstd
+
+  network:
+    name: actor_critic
+    separate: False
+    space:
+      continuous:
+        mu_activation: None
+        sigma_activation: None
+
+        mu_init:
+          name: default
+        sigma_init:
+          name: const_initializer
+          val: 0
+        fixed_sigma: True
+
+    critic_mlp:
+      units: [32, 32]
+      activation: elu
+
+    mlp:
+      units: [32, 32]
+      activation: elu
+      d2rl: False
+
+      initializer:
+        name: default
+      regularizer:
+        name: None
+
+  load_checkpoint: False
+  load_path: nn/warp_allegro_ppo.pth
+
+  config:
+    name: warp_allegro_ppo
+    env_name: warp
+    multi_gpu: False
+    ppo: True
+    mixed_precision: False
+    normalize_input: True
+    normalize_value: True
+    reward_shaper:
+      scale_value: 0.01
+    normalize_advantage: True
+    gamma: 0.99
+    tau: 0.95
+    learning_rate: 3e-4
+    lr_schedule: adaptive
+    lr_threshold: 0.008
+    kl_threshold: 0.008
+    score_to_win: 20000
+    max_epochs: 1000
+    save_best_after: 100
+    save_frequency: 400
+    grad_norm: 1.0
+    entropy_coef: 0.0
+    truncate_grads: True
+    e_clip: 0.2
+    num_actors: 512
+    steps_num: 32
+    minibatch_size: 8192
+    mini_epochs: 5
+    critic_coef: 4
+    clip_value: True
+    seq_len: 4
+    bounds_loss_coef: 0.0001
+    score_keys: ["control_pen", "ftip_err", "q_err", "pos_err", "force_err"]
+
+    player:
+      determenistic: True
+      games_num: 24
+      num_actors: 3
+      print_stats: True

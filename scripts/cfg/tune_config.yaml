@@ -1,0 +1,13 @@
+defaults:
+  - _self_
+  - task: simulate_object
+  - alg: control_test
+  # - override hydra/launcher: submitit_local
+
+
+# global defaults 
+num_envs: 1 
+render: true
+lr: 1e-3
+num_opt_steps: 100
+num_steps: 2

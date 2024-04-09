@@ -1,0 +1,62 @@
+defaults:
+  - _self_
+  - rewards:
+    - action_penalty4x
+    - object_pos_err
+    - reach_bonus
+    - drop_penalty
+    - rot_reward_delta
+    - rot_reward
+    - hand_joint_pos_err
+
+name: warp_repose_task
+
+score_keys:
+  - object_rot_err
+  - object_pose_err
+  - reach_bonus
+  - consecutive_successes
+  - action_penalty
+  - net_energy
+
+env:
+  _target_: dmanip.envs.ReposeTask
+  num_envs: ${resolve_default:1024,${num_envs}}
+  episode_length: 600
+  render: ${render}
+  render_mode: ${render:usd}
+  action_type: ${action:position}
+  reward_params: 
+    action_penalty: ${task.rewards.action_penalty}
+    object_pos_err: ${task.rewards.object_pos_err}
+    rot_reward: ${task.rewards.rot_reward}
+    reach_bonus: ${task.rewards.reach_bonus}
+    drop_penalty: ${task.rewards.drop_penalty}
+  hand_type: ${hand:allegro}
+  stochastic_init: true
+  stochastic_goal_and_pos: false
+  reset_goals: true
+  use_autograd: true
+  use_graph_capture: true
+  reach_threshold: 0.2  # radians from goal rotation considered success, ignores z-axis so 2x what is there in IGE
+  stiffness: 1000
+  rigid_contact_relaxation: 2.0
+  fall_dist: 0.24
+  no_grad: null
+  logdir: ${general.logdir}
+
+ppo:
+  max_epochs: 5000
+  save_best_after: 100
+  save_frequency: 400
+  num_actors: 1024
+  minibatch_size: 8192
+  steps_num: 8
+  actor_mlp:
+    units: [64, 64]
+  lr: 5e-4
+
+player:
+  deterministic: true
+  games_num: 100
+  print_stats: true

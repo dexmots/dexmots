@@ -1,0 +1,55 @@
+params:
+  diff_env:
+    name: AllegroWarpEnv
+    stochastic_env: False
+    episode_length: 256
+    goal_type: 6 # 0: position, 1: orientation, 2: both, 3: position trajectory, 4: orientation trajectory
+    action_type: 2 # 0: position, 1: torque
+    object_type: 8
+    goal_path: goal_traj-sliding-2.npy
+    rew_kw:
+      c_act: 0.
+      c_q: 10.
+      c_finger: 0.2
+      c_ft: 0.2
+
+  network:
+    actor: ActorStochasticMLP # ActorDeterministicMLP
+    actor_mlp:
+      units: [256, 256]
+      activation: elu
+
+    critic: CriticMLP
+    critic_mlp:
+      units: [256, 256]
+      activation: elu
+
+  config:
+    name: warp_allegro_shac
+    actor_learning_rate: 2.6e-3 # adam
+    critic_learning_rate: 2.6e-3 # adam
+    lr_schedule: linear # ['constant', 'linear']
+    mixed_precision: True
+    target_critic_alpha: 0.2
+    obs_rms: True
+    ret_rms: False
+    critic_iterations: 16
+    critic_method: td-lambda # ['td-lambda', 'one-step']
+    lambda: 0.95
+    num_batch: 4
+    gamma: 0.99
+    betas: [0.7, 0.95] # adam
+    max_epochs: 2000
+    steps_num: 16
+    grad_norm: 1.0
+    truncate_grads: True
+    num_actors: 3
+    save_interval: 400
+    score_keys: ["control_pen", "ftip_err", "q_err", "pos_err", "force_err"]
+    early_stopping_patience: 160  # leave unset/num_epochs if unlimited
+
+    player:
+      determenistic: True
+      games_num: 1
+      num_actors: 1
+      print_stats: True

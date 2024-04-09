@@ -1,0 +1,32 @@
+name: claw_shac_reward
+program: train_shac.py
+method: grid
+project: diff_manip
+entity: dmanip-rss
+metric:
+  name: scores/q_err/iter
+  goal: minimize
+parameters:
+  c_act:
+    values: [0.1, 0, 1e-3]
+  c_finger:
+    values: [0.1, 1e-2, 0]
+  c_q:
+    values: [100., 10.]
+  seed:
+    values: [0, 10, 20]
+early_terminate:
+  type: hyperband
+  s: 2
+  eta: 3
+  max_iter: 243
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - ${args}
+  - "--logdir"
+  - "logs/ClawV2/shac-sweep/"
+  - "--cfg"
+  - "cfg/shac/claw-det.yaml"
+  - "--wandb"

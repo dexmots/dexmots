@@ -1,0 +1,4 @@
+_target_: dmanip.envs.wrappers.Monitor
+env: ${task.env}
+save_dir: outputs/videos/${now:%Y-%m-%d_%H-%M-%S}
+ep_filter: 5

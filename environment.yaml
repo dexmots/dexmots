@@ -1,0 +1,28 @@
+name: dmanip
+channels:
+  - pytorch
+  - nvidia/label/cuda-11.8.0
+  - defaults
+dependencies:
+  - nvidia/label/cuda-11.8.0::cuda-toolkit=11.8
+  - nvidia/label/cuda-11.8.0::cuda=11.8
+  - pytorch::pytorch=1.12
+  - torchvision=0.13.1
+  - pip
+  - python=3.8
+  - jupyterlab
+  - plotly
+  - cython=0.29
+  - numpy=1.20
+  - pip:
+    - tqdm
+    - matplotlib
+    - black>=22.6
+    - glfw==2.5
+    - trimesh==3.12
+    - usd-core==22.3
+    - hydra-core==1.3
+    - PyOpenGL==3.1
+    - torchviz>=0.0.2
+    - urdfpy==0.0.22
+    - imageio[ffmpeg]==0.4.9

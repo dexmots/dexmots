@@ -1,0 +1,35 @@
+name: warp_hopper
+
+env_name: HopperWarpEnv
+
+env:
+  _target_: dmanip.envs.HopperEnv
+  render: ${render}
+  device: ${general.device}
+  num_envs: 64
+  seed: ${general.seed}
+  episode_length: 1000
+  no_grad: ??? # decided based on algorithm
+  stochastic_init: True
+
+shac:
+  actor_lr: 1e-3
+  critic_lr: 1e-2
+  max_epochs: 500
+  target_critic_alpha: 0.7
+  actor_mlp:
+    units:
+      - 128
+      - 128
+
+ppo:
+  max_epochs: 500
+  minibatch_size: 1920
+  save_interval: 100
+  save_best_after: 50
+  num_actors: 32
+  steps_num: 240
+
+player:
+  games_num: 128
+  num_actors: 4

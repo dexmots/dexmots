@@ -1,0 +1,27 @@
+name: allegro_ori_shac
+program: train_shac.py
+method: grid
+project: dmanip
+entity: krshna
+metric:
+  name: scores/q_err/iter
+  goal: minimize
+parameters:
+  c_act:
+    value: 0.1
+  c_finger:
+    value: 0.2
+  c_q:
+    value: 10.
+  seed:
+    values: [0, 10, 20]
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - ${args}
+  - "--logdir"
+  - "logs/AllegroRotate/shac-ori-sweep/"
+  - "--cfg"
+  - "cfg/shac/allegro-3090.yaml"
+  - "--wandb"

@@ -1,0 +1,3 @@
+_target_: dmanip.envs.wrappers.InfoLogger
+env: ${task.env}
+score_keys: ${task.score_keys}

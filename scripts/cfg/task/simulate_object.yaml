@@ -1,0 +1,20 @@
+defaults:
+  - _self_
+  - rewards:
+    - action_penalty
+    - object_pos_err
+    - object_joint_pos_err
+
+name: repose_task
+
+env:
+  _target_: dmanip.envs.ObjectTask
+  num_envs: ${resolve_default:1,${...num_envs}}
+  episode_length: 500
+  render: ${render}
+  reward_params: 
+    action_penalty: ${...rewards.action_penalty}
+    object_pos_err: ${...rewards.object_pos_err}
+  object_type: ${object:spray_bottle}
+  object_id: 0
+

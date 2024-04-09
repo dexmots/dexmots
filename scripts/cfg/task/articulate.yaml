@@ -1,0 +1,36 @@
+defaults:
+  - _self_
+  - rewards:
+    - action_penalty
+    - object_pos_err
+
+name: articulate_task
+
+env:
+  _target_: dmanip.envs.ArticulateTask
+  num_envs: ${resolve_default:256,${...num_envs}}
+  episode_length: 500
+  render: ${render}
+  rew_params: 
+    action_penalty: ${...rewards.action_penalty}
+    object_pos_err: ${...rewards.object_pos_err}
+    object_joint_pos_err: ${...rewards.object_joint_pos_err}
+  hand_start_orientation: ${eval:'(-np.pi / 2 * 2, np.pi * 0.75, np.pi / 2 * 2)'}
+  hand_start_position: ${eval:'(0.0, 0.3, 0.0)'}
+  stochastic_init: true
+
+
+ppo:
+  max_epochs: 5000
+  save_best_after: 100
+  save_frequency: 400
+  num_actors: 2048
+  minibatch_size: 16384
+  steps_num: 32
+  actor_mlp:
+    units: [512, 256, 128]
+
+player:
+  deterministic: True
+  games_num: 100000
+  print_stats: True

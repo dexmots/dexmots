@@ -1,0 +1,39 @@
+name: warp_cartpole
+env_name: CartPoleSwingUpWarpEnv
+
+env:
+  _target_: dmanip.envs.CartPoleSwingUpWarpEnv
+  render: ${render}
+  device: ${general.device}
+  num_envs: 1024
+  no_grad: ???
+  seed: ${general.seed}
+  episode_length: 240
+  stochastic_init: True
+  early_termination: False
+  ag_return_body: True
+
+shac:
+  actor_lr: 1e-3
+  critic_lr: 1e-2
+  max_epochs: 500
+  target_critic_alpha: 0.7
+  actor_mlp:
+    units:
+      - 128
+      - 128
+
+shac2:
+  critic_lr: 1e-3
+
+ppo:
+  max_epochs: 500
+  minibatch_size: 1920
+  save_interval: 100
+  save_best_after: 50
+  num_actors: 32
+  steps_num: 240
+
+player:
+  games_num: 12
+  num_actors: 4

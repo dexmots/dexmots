@@ -1,0 +1,32 @@
+name: allegro_ppo_reward_sweep
+program: train_ppo.py
+method: grid
+project: dmanip
+entity: krshna
+metric:
+  name: scores/q_err/iter
+  goal: minimize
+parameters:
+  c_act:
+    values: [0.1, 1, 0, 1e-3]
+  c_finger:
+    values: [0.2, 1, 0]
+  c_q:
+    values: [1., 10., 20.]
+  seed:
+    values: [0, 10, 20]
+early_terminate:
+  type: hyperband
+  s: 2
+  eta: 3
+  max_iter: 27
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - ${args}
+  - "--logdir"
+  - "logs/AllegroRotate/ppo-sweep/"
+  - "--cfg"
+  - "cfg/ppo/allegro.yaml"
+  - "--wandb"

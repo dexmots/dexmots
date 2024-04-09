@@ -1,0 +1,78 @@
+name: ppo
+
+params:
+  algo:
+    name: a2c_continuous
+
+  model:
+    name: continuous_a2c_logstd
+
+  network:
+    name: actor_critic
+    separate: False
+    space:
+      continuous:
+        mu_activation: None
+        sigma_activation: None
+
+        mu_init:
+          name: default
+        sigma_init:
+          name: const_initializer
+          val: 0
+        fixed_sigma: True
+    mlp:
+      units: ${resolve_default:[64, 64],${task.ppo.actor_mlp.units}}
+      activation: elu
+      d2rl: False
+      
+      initializer:
+        name: default
+      regularizer:
+        name: None
+
+  load_checkpoint: False
+  load_path: nn/${task.name}_ppo.pth
+
+  config:
+    name: ${task.name}_ppo
+    env_name: ${task.name}
+    multi_gpu: False
+    ppo: True
+    mixed_precision: False
+    normalize_input: True
+    normalize_value: True
+    value_bootstrap: True
+    reward_shaper:
+      scale_value: 0.01
+    normalize_advantage: True
+    gamma: 0.99
+    tau: 0.95
+    learning_rate: ${resolve_default:3e-4,${task.ppo.lr}}
+    lr_schedule: adaptive
+    schedule_type: standard
+    kl_threshold: 0.016
+    score_to_win: 200000
+    max_epochs: ${resolve_default:2000,${task.ppo.max_epochs}}
+    save_best_after: ${resolve_default:500,${task.ppo.save_best_after}}
+    save_frequency: ${resolve_default:200,${task.ppo.save_interval}}
+    print_stats: True
+    grad_norm: 1.0
+    entropy_coef: 0.0
+    truncate_grads: True
+    e_clip: 0.2
+    num_actors: ${resolve_default:2048,${num_envs}}
+    horizon_length: ${resolve_child:8,${task.ppo},steps_num}
+    minibatch_size: ${resolve_default:16384,${task.ppo.minibatch_size}}
+    mini_epochs: 5
+    critic_coef: 4
+    clip_value: True
+    seq_len: 4
+    bounds_loss_coef: 0.0001
+    score_keys: ${resolve_default:[],${task.score_keys}}
+    
+    player:
+      games_num: ${resolve_default:24,${task.player.games_num}}
+      num_actors: ${resolve_default:4,${task.player.num_actors}} 
+      deterministic: true
+      print_stats: True

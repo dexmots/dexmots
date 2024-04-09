@@ -1,0 +1,4 @@
+link_0 hinge handle
+link_1 slider+ lid
+link_2 slider+ lid
+link_3 free dispenser_body

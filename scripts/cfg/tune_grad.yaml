@@ -1,0 +1,56 @@
+defaults:
+  - _self_
+  - task: claw
+  - alg: shac2
+  # - override hydra/launcher: submitit_local
+
+
+# hydra:
+#   sweep:
+#     dir: checkpoints/${exp_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+#     subdir: ${wandb.sweep_name_prefix}-${hydra.job.num}
+  # launcher: # submitit_slurm launcher params
+  #   gpus_per_node: 1
+  #   tasks_per_node: 4
+  #   cpus_per_task: 8
+  #
+exp_name: warp_benchmarks
+
+resume_model: null
+
+general:
+  # logdir: logs/${alg.name}/${task.name}/
+  logdir: logs
+  no_time_stamp: False
+  device: cuda:0
+  seed: 42
+  checkpoint:
+
+num_envs: 
+render: false
+debug: false
+gradcheck: true
+atol: 1e-05
+rtol: 0.001
+
+# mostly used for logging and naming experiments
+exp_name: shac_benchmarks
+
+general:
+  train: True # if False, we're in eval mode
+  logdir: logs
+  device: cuda:0
+  run_wandb: False
+  seed: 42
+  checkpoint:
+  multi_gpu: False # for PPO
+  mixed_precision: False # for PPO
+
+# env-specific defaults for different algs
+env:
+  gamma: 0.99
+  player:
+    games_num: 12
+    num_actors: 4
+
+

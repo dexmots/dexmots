@@ -1,0 +1,33 @@
+name: df_ant
+env:
+  _target_: dmanip.envs.AntEnv
+  render: ${render}
+  device: ${general.device}
+  num_envs: 64
+  stochastic_init: true
+  seed: ${general.seed}
+  no_grad: ??? # decided based on algorithm
+  episode_length: 1000
+  MM_caching_frequency: 16
+  early_termination: True
+
+shac:
+  actor_lr: 2e-3
+  critic_lr: 2e-3
+  max_epochs: 2000
+  num_actors: 64
+  target_critic_alpha: 0.2
+  actor_mlp:
+    units: [128, 64, 32]
+  critic_mlp:
+    units: [64, 64]
+
+ppo:
+  max_epochs: 5000
+  minibatch_size: 16384
+  num_actors: 2048
+  steps_num: 32
+  actor_mlp:
+    units: [128, 64, 32]
+  critic_mlp:
+    units: [128, 64, 32]
